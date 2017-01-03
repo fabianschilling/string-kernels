@@ -1,0 +1,86 @@
+\documentclass[11pt, a4paper, oneside]{article}
+\usepackage[utf8]{inputenc} % Makes UTF-8 default encoding
+\usepackage[T1]{fontenc} % Makes fonts behave
+\usepackage[english]{babel} % Make english default language
+\usepackage{geometry} % Adjust page geometry
+\usepackage{lipsum} % Used to create dummy text
+\usepackage{comment} % Used to define comment environment
+\usepackage{amsmath} % Useful math macros
+\usepackage{amsfonts} % Useful math fonts
+\usepackage{amssymb} % Useful math symbols
+\usepackage{bm} % Bold math
+\usepackage{hyperref} % Hyperlinks
+\usepackage{url} % Write URLs without escaping
+\usepackage{fancyhdr} % Header and footer
+\usepackage{listings} % Code
+\usepackage{graphicx} % Figures
+\usepackage{float} % Figure placement
+\usepackage{subfigure} % Subfigures
+\usepackage{tabularx} % Tables
+\usepackage{xcolor} % Colors
+\usepackage{todonotes} % Notes
+\usepackage{caption} % Captions
+\usepackage{cancel} % Strikethrough text
+\usepackage{framed} % Boxes around stuff
+\usepackage{tikz} % Diagrams
+\usepackage{pgf} % Plots
+\usepackage[parfill]{parskip} % No indents after paragraph
+
+\graphicspath{figures} % Set graphics path
+
+% Preamble
+\title{Template Article}
+\author{Fabian Schilling\\
+\href{mailto:fabian.schilling@me.com}{\texttt{fabian.schilling@me.com}}}
+\date{\today}
+
+% Header and footer
+\pagestyle{fancy}
+\fancyhf{} % clear
+\rhead{Fabian Schilling}
+\lhead{Article Template}
+\rfoot{\thepage}
+
+\begin{document} % Begin document
+
+% \tableofcontents % Write table of contents
+
+\maketitle % Write preamble
+
+% Abstract
+\begin{abstract}
+  \lipsum[4]
+\end{abstract}
+
+\section{Section} \label{sec:section}
+
+\lipsum[4]
+
+Einstein's most famous equation \cite{einstein}
+
+% Equation
+\begin{equation} \label{eq:equation}
+  e = mc^2
+\end{equation}
+
+\subsection{Sub-section} \label{sec:subsection}
+
+\lipsum[4]
+
+\subsubsection{Sub-sub-section} \label{sec:subsubsection}
+
+\lipsum[4]
+
+\paragraph{Paragraph} \label{par:paragraph}
+
+\lipsum[4]
+
+% Comment
+\begin{comment}
+  This is just a comment. It will not be visible in the PDF!
+\end{comment}
+
+\bibliography{bib}
+\bibliographystyle{plain}
+
+\end{document} % End document
