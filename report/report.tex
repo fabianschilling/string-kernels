@@ -1,8 +1,8 @@
-\documentclass[11pt, a4paper, oneside]{article}
+\documentclass[12pt, a4paper, oneside]{article}
 \usepackage[utf8]{inputenc} % Makes UTF-8 default encoding
 \usepackage[T1]{fontenc} % Makes fonts behave
 \usepackage[english]{babel} % Make english default language
-\usepackage{geometry} % Adjust page geometry
+\usepackage[left=2.5cm, right=2.5cm]{geometry} % Adjust page geometry
 \usepackage{lipsum} % Used to create dummy text
 \usepackage{comment} % Used to define comment environment
 \usepackage{amsmath} % Useful math macros
@@ -29,16 +29,21 @@
 \graphicspath{figures} % Set graphics path
 
 % Preamble
-\title{Template Article}
-\author{Fabian Schilling\\
-\href{mailto:fabian.schilling@me.com}{\texttt{fabian.schilling@me.com}}}
+\title{DD2434 Project\\
+Text Classification using String Kernels}
+\author{
+  \begin{tabular}{c c c}
+    Xi Chen & Joonatan Mänttäri & Fabian Schilling \\
+    \texttt{xi8@kth.se} & \texttt{manttari@kth.se} & \texttt{fabsch@kth.se}
+  \end{tabular}
+}
 \date{\today}
 
 % Header and footer
 \pagestyle{fancy}
 \fancyhf{} % clear
-\rhead{Fabian Schilling}
-\lhead{Article Template}
+\rhead{X. Chen, J. Mänttäri, F. Schilling}
+\lhead{DD2434 Project Report}
 \rfoot{\thepage}
 
 \begin{document} % Begin document
@@ -54,31 +59,7 @@
 
 \section{Section} \label{sec:section}
 
-\lipsum[4]
-
-Einstein's most famous equation \cite{einstein}
-
-% Equation
-\begin{equation} \label{eq:equation}
-  e = mc^2
-\end{equation}
-
-\subsection{Sub-section} \label{sec:subsection}
-
-\lipsum[4]
-
-\subsubsection{Sub-sub-section} \label{sec:subsubsection}
-
-\lipsum[4]
-
-\paragraph{Paragraph} \label{par:paragraph}
-
-\lipsum[4]
-
-% Comment
-\begin{comment}
-  This is just a comment. It will not be visible in the PDF!
-\end{comment}
+Our paper: \cite{kernels}.
 
 \bibliography{bib}
 \bibliographystyle{plain}
