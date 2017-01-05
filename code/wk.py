@@ -1,0 +1,2 @@
+def wk(document):
+  pass
