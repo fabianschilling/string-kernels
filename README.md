@@ -2,7 +2,7 @@
 
 Project in Advanced Machine Learning about String Kernels
 
-# Install NLTK
+## Install NLTK
 
 To install NLTK:
 ``` sh
@@ -14,4 +14,5 @@ To download the dataset open up a `python` prompt:
 >>> import nltk
 >>> nltk.download()
 ```
-The select the 
+
+In the window that pops up, select the `Corpora` tab and select `reuters` to download the `Reuters-21578 ModApte version`. We also need the `punkt` module from the `Models` tab.
