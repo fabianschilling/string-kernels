@@ -65,7 +65,7 @@ def ssk (doc1, doc2, k=2, lam=0.5):
     doc_t = [doc2, doc2]
     norms[0] = get_kernel(doc_s, k, lam)
     norms[1] = get_kernel(doc_t, k, lam)
-
+ 
     for i in xrange(2):
         kernel[i,i] = 1
 
