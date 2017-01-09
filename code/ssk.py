@@ -49,38 +49,38 @@ def compute_kernel_matrix (docs, lam, k, kernel, norms):
     for i in xrange(2):
         for j in xrange(2):
             if kernel[i][j] == -1:
-                kernel[i][j] = get_kernel(docs, lam, k)
+                kernel[i][j] = get_kernel(docs, k, lam)
                 kernel[i][j] = kernel[i][j]/math.sqrt(norms[0] * norms[1])
                 kernel[j][i] = kernel[i][j]
 
     return kernel
 
-def ssk (docs, k=2, lam=0.5):
+def ssk (doc1,doc2, k=2, lam=0.5):
     # if len(s)==0 or len(t) == 0:
         # return wrong
     # size = 2, len(s), len(t)
-    print docs, lam, k
+    print lam, k
 
     size = 2, 2
     kernel = np.zeros(size, dtype=np.float32)
     norms = np.zeros(2, dtype=np.float32)
     kernel[:,:] = -1 
 
-    doc_s = [docs[0], docs[0]]
-    doc_t = [docs[1], docs[1]]
-    norms[0] = get_kernel(doc_s, lam, k)
-    norms[1] = get_kernel(doc_t, lam, k)
+    doc_s = [doc1, doc1]
+    doc_t = [doc2, doc2]
+    norms[0] = get_kernel(doc_s, k, lam)
+    norms[1] = get_kernel(doc_t, k, lam)
 
     for i in xrange(2):
         kernel[i,i] = 1
 
-    kernel = compute_kernel_matrix(docs, lam, k, kernel, norms);
-    print kernel
+    kernel = compute_kernel_matrix([doc1, doc2], lam, k, kernel, norms);
+    #print kernel
 
 def main(args):
     docs = ["science is organized knowledge", "wisdom is organized life"]
     # s, t = "cat", "card"
-    ssk(docs, 0.5, 2)
+    ssk(docs[0],docs[1], 0.5, 2)
 
     
 if __name__ == '__main__':
