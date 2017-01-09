@@ -1,3 +1,16 @@
 \section{Method} \label{sec:method}
-Blablablablabla
 
+We aim to replicate the results presented in \cite{kernels} by comparing three different string kernels in terms of their text categorization performance.
+
+The three kernels can be seen as measuring the similary between two text documents and are namely: the word kernel (WK) based on the bag-of-words model, the $n$-gram kernel (NGK) based on the $n$-gram representation, and the string subsequence kernel (SSK) \cite{kernels} which is based on substrings.
+
+We employ these custom string kernels in conjunction with a support vector machine (SVM) implementation from the machine learning library Scikit-learn \cite{sklearn}.
+
+We assess the text classification performance on the popular ModApte split of the Reuters-21578 dataset which contains news articles from $80$ categories such as \textit{earn}, \textit{acquisition}, \textit{crude}, and \textit{corn}. The dataset is easily obtained using the Natural Language Toolkit (NLTK) \cite{nltk}.
+
+We train the kernel SVM and test the classification performance on a self-constructed train/test split of the Reuters dataset that contains the four categories mentioned above. Our evaluation metrics are: precision, recall, and F1-score. The classification results are obtained using different hyperparameters of the respective kernel.
+
+% TODO: maybe a table with hyperparameters that we're experimenting with
+% TODO: we should definitely mention the (comparatively) shitty performance of SSK in their experiments
+% TODO: are we getting any noteworthy speed improvements by using SSK?
+% TODO: should we compare this to word2vec just for fun and see what comes out?
