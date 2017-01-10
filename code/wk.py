@@ -65,9 +65,9 @@ def wkGmats(trainDocs, testDocs):
     n_features_test = 400
     #use smallest feature set (otherwise dot product has size mismatch)
     n_features_min = min(n_features_train,n_features_test)
-    print "features train: ", n_features_train
-    print "features test: ", n_features_test
-    print "features used: ", n_features_min
+    print("features train: ", n_features_train)
+    print("features test: ", n_features_test)
+    print("features used: ", n_features_min)
     
     #defaultanalyzer "word" removes non-chars in preprocessing and tokenizes words. does not remove "markup tokens"
     #stop_words should be "english" if not using clean_input_docs()
@@ -89,10 +89,10 @@ def wkGmats(trainDocs, testDocs):
     nTrainDocs = len(tfidf)
     GmatTrain = np.ones((nTrainDocs,nTrainDocs))
 
-    for i in xrange( 0, nTrainDocs ):
+    for i in range( 0, nTrainDocs ):
         if( (i+1)%(nTrainDocs/5) == 0 ):
-            print "row %d of %d\n" % ( i+1, nTrainDocs )       
-        for j in xrange(0,nTrainDocs):
+            print("row %d of %d\n" % ( i+1, nTrainDocs )       )
+        for j in range(0,nTrainDocs):
             GmatTrain[i][j] = np.dot(tfidf[i], tfidf[j])
             
     n_features_train = len(tfidf[0])
@@ -118,10 +118,10 @@ def wkGmats(trainDocs, testDocs):
     nTestDocs = len(tfidfTest)
     GmatTest = np.ones((nTestDocs,nTrainDocs))
 
-    for i in xrange( 0, nTestDocs ):
+    for i in range( 0, nTestDocs ):
         if( (i+1)%(nTestDocs/5) == 0 ):
-            print "row %d of %d\n" % ( i+1, nTestDocs )       
-        for j in xrange(0,nTrainDocs):
+            print("row %d of %d\n" % ( i+1, nTestDocs )       )
+        for j in range(0,nTrainDocs):
             GmatTrain[i][j] = np.dot(tfidfTest[i], tfidf[j])
 
     return GmatTrain, GmatTest

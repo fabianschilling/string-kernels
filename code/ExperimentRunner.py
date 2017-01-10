@@ -28,23 +28,23 @@ class ExperimentRunner:
     CRUDE = 2
     CORN = 3
     
-    #EARN_N_TRAIN = 10
-    #EARN_N_TEST = 8
-    #ACQ_N_TRAIN = 10
-    #ACQ_N_TEST = 8
-    #CRUDE_N_TRAIN = 10
-    #CRUDE_N_TEST = 8
-    #CORN_N_TRAIN = 10
-    #CORN_N_TEST = 8
+    EARN_N_TRAIN = 10
+    EARN_N_TEST = 8
+    ACQ_N_TRAIN = 10
+    ACQ_N_TEST = 8
+    CRUDE_N_TRAIN = 10
+    CRUDE_N_TEST = 8
+    CORN_N_TRAIN = 10
+    CORN_N_TEST = 8
     
-    EARN_N_TRAIN = 152
-    EARN_N_TEST = 40
-    ACQ_N_TRAIN = 114
-    ACQ_N_TEST = 25
-    CRUDE_N_TRAIN = 76
-    CRUDE_N_TEST = 15
-    CORN_N_TRAIN = 38
-    CORN_N_TEST = 10
+    # EARN_N_TRAIN = 152
+    # EARN_N_TEST = 40
+    # ACQ_N_TRAIN = 114
+    # ACQ_N_TEST = 25
+    # CRUDE_N_TRAIN = 76
+    # CRUDE_N_TEST = 15
+    # CORN_N_TRAIN = 38
+    # CORN_N_TEST = 10
     
     def show_results_table(self,precision,recall,fscore,Ktype):
         #show table with results
@@ -71,15 +71,12 @@ class ExperimentRunner:
     def prepare_data(self):
         #import data
 
-        print "importing train + test data..."
+        print("importing train + test data...")
         all_files = reuters.fileids()
-        #print(len(all_files))
 
         train_files = list(filter(lambda file: file.startswith('train'), all_files))
-        #print(len(train_files))
 
         test_files = list(filter(lambda file: file.startswith('test'), all_files))
-        #print(len(test_files))
 
         categories = reuters.categories()
 
@@ -137,7 +134,7 @@ class ExperimentRunner:
             self.TestDocVals.append(" ".join(word_tokenize(self.clean_doc(reuters.raw(docHandle)))))
             self.TestDocLabels.append(ExperimentRunner.CORN)
 
-        print "done"
+        print("done")
         
     def clean_doc(self, raw_doc):
         doc_text = BeautifulSoup(raw_doc, "lxml").get_text() 
@@ -170,12 +167,12 @@ class ExperimentRunner:
             lamb: Decay factor for SSK
           """
 
-        print "computing Gram matrices"
+        print("computing Gram matrices")
         #compute Gram matrix for training (train,train)
-        for i in xrange( 0, len(self.TrainDocVals) ):
+        for i in range( 0, len(self.TrainDocVals) ):
             if( (i+1)%10 == 0 ):
-                print "Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) )       
-            for j in xrange(0,len(self.TrainDocVals)):
+                print("Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) ) )
+            for j in range(0,len(self.TrainDocVals)):
                 if(WK):
                     self.WKTrainGram[i][j] = wk.wk(self.TrainDocVals[i], self.TrainDocVals[j])
                 if(NGK):
@@ -185,10 +182,10 @@ class ExperimentRunner:
         
         #compute Gram matrix for testing (test,train). I believe this is correct due to:
         # http://stats.stackexchange.com/questions/92101/prediction-with-scikit-and-an-precomputed-kernel-svm
-        for i in xrange( 0, len(self.TestDocVals) ):
+        for i in range( 0, len(self.TestDocVals) ):
             if( (i+1)%10 == 0 ):
-                print "Test row %d of %d\n" % ( i+1, len(self.TestDocVals) )       
-            for j in xrange(0,len(self.TrainDocVals)):
+                print("Test row %d of %d\n" % ( i+1, len(self.TestDocVals) )       )
+            for j in range(0,len(self.TrainDocVals)):
                 if(WK):
                     self.WKTestGram[i][j] = wk.wk(self.TestDocVals[i], self.TrainDocVals[j])
                 if(NGK):
@@ -196,7 +193,7 @@ class ExperimentRunner:
                 if(SSK):
                     self.SSKTestGram[i][j] = ssk.ssk(self.TestDocVals[i], self.TrainDocVals[j], k, lamb)
 
-        print "done"
+        print("done")
 
     def do_classification(self, trainKernel, testKernel, Ktype):
         """ Runs training and prediction using given pre-computed kernels
@@ -211,7 +208,7 @@ class ExperimentRunner:
           """
         
         #TODO: run 10 times like they do in the paper?
-        print "classifying for %s" %Ktype
+        print("classifying for %s" %Ktype)
         clf = svm.SVC(kernel='precomputed')
 
         clf.fit(trainKernel, self.TrainDocLabels)
