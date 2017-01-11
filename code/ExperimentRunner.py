@@ -212,11 +212,13 @@ class ExperimentRunner:
         
         #TODO: run 10 times like they do in the paper?
         print "classifying for %s" %Ktype
-        clf = svm.SVC(kernel='precomputed')
-
+        clf = svm.SVC(kernel='precomputed', cache_size=7000)
+        
+        print ("pre-train")
         clf.fit(trainKernel, self.TrainDocLabels)
+        print ("pre-predic")
         label_pred = clf.predict(testKernel)
-
+        print ("post-predict")
         precision, recall, fscore, support = metrics.precision_recall_fscore_support(self.TestDocLabels, label_pred)
         return precision, recall, fscore
         
@@ -268,7 +270,18 @@ class ExperimentRunner:
             self.show_results_table(res[0],res[1],res[2],'WK')
             
             return res
-
+        
+    def run_lin_WK_test(self):
+        clf = svm.SVC(kernel='linear', cache_size=7000)
+        trainF, testF = wk.wkFeatVecs(self.TrainDocVals, self.TestDocVals)
+        print ("pre-train")
+        clf.fit(trainF, self.TrainDocLabels)
+        print ("pre-predic")
+        label_pred = clf.predict(testF)
+        print ("post-predict")
+        precision, recall, fscore, support = metrics.precision_recall_fscore_support(self.TestDocLabels, label_pred)
+        self.show_results_table(precision, recall, fscore, 'WK')
+        
     def run_NGK_test(self, k=2, NGKGramFileName = ""):
             """ Performs classification test with NGK method
                 Args:
@@ -285,6 +298,20 @@ class ExperimentRunner:
             else:
                 self.compute_gram_matrices(k=k,WK=False,NGK=True, SSK=False)
             
+            res = self.do_classification(self.NGKTrainGram, self.NGKTestGram, 'NGK')
+            self.show_results_table(res[0],res[1],res[2],'NGK')
+            
+            return res
+        
+    def run_fast_NGK_test(self, k=2):
+            """ Performs classification test with NGK method, using entire doc corporus for feature vectors
+                    Returns:
+                        [precision,recall,fscore] 3 x n_categories
+                        precision: precision score for all categories
+                        recall: recall score for all categories
+                        fscore: F1 score for all categories
+              """
+            self.NGKTrainGram, self.NGKTestGram = ngk.ngkGmats(self.TrainDocVals, self.TestDocVals)
             res = self.do_classification(self.NGKTrainGram, self.NGKTestGram, 'NGK')
             self.show_results_table(res[0],res[1],res[2],'NGK')
             
