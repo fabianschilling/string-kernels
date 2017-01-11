@@ -212,11 +212,13 @@ class ExperimentRunner:
         
         #TODO: run 10 times like they do in the paper?
         print "classifying for %s" %Ktype
-        clf = svm.SVC(kernel='precomputed')
-
+        clf = svm.SVC(kernel='precomputed', cache_size=7000)
+        
+        print ("pre-train")
         clf.fit(trainKernel, self.TrainDocLabels)
+        print ("pre-predic")
         label_pred = clf.predict(testKernel)
-
+        print ("post-predict")
         precision, recall, fscore, support = metrics.precision_recall_fscore_support(self.TestDocLabels, label_pred)
         return precision, recall, fscore
         
@@ -268,7 +270,18 @@ class ExperimentRunner:
             self.show_results_table(res[0],res[1],res[2],'WK')
             
             return res
-
+        
+    def run_lin_WK_test(self):
+        clf = svm.SVC(kernel='linear', cache_size=7000)
+        trainF, testF = wk.wkFeatVecs(self.TrainDocVals, self.TestDocVals)
+        print ("pre-train")
+        clf.fit(trainF, self.TrainDocLabels)
+        print ("pre-predic")
+        label_pred = clf.predict(testF)
+        print ("post-predict")
+        precision, recall, fscore, support = metrics.precision_recall_fscore_support(self.TestDocLabels, label_pred)
+        self.show_results_table(precision, recall, fscore, 'WK')
+        
     def run_NGK_test(self, k=2, NGKGramFileName = ""):
             """ Performs classification test with NGK method
                 Args:
@@ -285,6 +298,20 @@ class ExperimentRunner:
             else:
                 self.compute_gram_matrices(k=k,WK=False,NGK=True, SSK=False)
             
+            res = self.do_classification(self.NGKTrainGram, self.NGKTestGram, 'NGK')
+            self.show_results_table(res[0],res[1],res[2],'NGK')
+            
+            return res
+        
+    def run_fast_NGK_test(self, k=2):
+            """ Performs classification test with NGK method, using entire doc corporus for feature vectors
+                    Returns:
+                        [precision,recall,fscore] 3 x n_categories
+                        precision: precision score for all categories
+                        recall: recall score for all categories
+                        fscore: F1 score for all categories
+              """
+            self.NGKTrainGram, self.NGKTestGram = ngk.ngkGmats(self.TrainDocVals, self.TestDocVals,k)
             res = self.do_classification(self.NGKTrainGram, self.NGKTestGram, 'NGK')
             self.show_results_table(res[0],res[1],res[2],'NGK')
             
@@ -307,11 +334,73 @@ class ExperimentRunner:
             else:
                 self.compute_gram_matrices(k,lamb,WK=False,NGK=False, SSK=True)
             
-            res = self.do_classification(self.NGKTrainGram, self.NGKTestGram, 'SSK')
+            res = self.do_classification(self.SSKTrainGram, self.SSKTestGram, 'SSK')
             self.show_results_table(res[0],res[1],res[2],'SSK')
             
             return res
-    
+        
+    def run_SSK_k_Combi_test(self, k1, k2, lamb):
+        print "computing Gram matrices"
+        #compute Gram matrix for training (train,train)
+        for i in xrange( 0, len(self.TrainDocVals) ):
+            if( (i+1)%10 == 0 ):
+                print "Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) )       
+            for j in xrange(0,len(self.TrainDocVals)):
+                self.SSKTrainGram[i][j] = ssk.ssk(self.TrainDocVals[i], self.TrainDocVals[j], k1, lamb) +                                                                 ssk.ssk(self.TrainDocVals[i], self.TrainDocVals[j], k2, lamb)
+        
+        for i in xrange( 0, len(self.TestDocVals) ):
+            if( (i+1)%10 == 0 ):
+                print "Test row %d of %d\n" % ( i+1, len(self.TestDocVals) )       
+            for j in xrange(0,len(self.TrainDocVals)):
+                self.SSKTestGram[i][j] = ssk.ssk(self.TestDocVals[i], self.TrainDocVals[j], k1, lamb) +                                                                  ssk.ssk(self.TestDocVals[i], self.TrainDocVals[j], k2, lamb) 
+
+        print "done"
+        res = self.do_classification(self.SSKTrainGram, self.SSKTestGram, 'SSK')
+        self.show_results_table(res[0],res[1],res[2],'SSK')
+        
+    def run_SSK_NGK_Combi_test(self, k, wSSK, wNGK, lamb):
+        print "computing Gram matrices"
+        #get NGK mat
+        print "NGK..."
+        self.NGKTrainGram, self.NGKTestGram = ngk.ngkGmats(self.TrainDocVals, self.TestDocVals,k)
+        
+        #get SSK + NGK mat
+        print "NGK + SSK..."
+        for i in xrange( 0, len(self.TrainDocVals) ):
+            if( (i+1)%10 == 0 ):
+                print "Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) )       
+            for j in xrange(0,len(self.TrainDocVals)):
+                self.SSKTrainGram[i][j] = ssk.ssk(self.TrainDocVals[i], self.TrainDocVals[j], k, lamb)*wSSK +                                                                 self.NGKTrainGram[i][j]*wNGK
+        
+        for i in xrange( 0, len(self.TestDocVals) ):
+            if( (i+1)%10 == 0 ):
+                print "Test row %d of %d\n" % ( i+1, len(self.TestDocVals) )       
+            for j in xrange(0,len(self.TrainDocVals)):
+                self.SSKTestGram[i][j] = ssk.ssk(self.TestDocVals[i], self.TrainDocVals[j], k, lamb)*wSSK +                                                                  self.NGKTestGram[i][j]*wNGK
+
+        print "done"
+        res = self.do_classification(self.SSKTrainGram, self.SSKTestGram, 'SSK')
+        self.show_results_table(res[0],res[1],res[2],'SSK')
+        
+    def run_SSK_lam_Combi_test(self, k, lam1, lam2):
+        print "computing Gram matrices"
+        #compute Gram matrix for training (train,train)
+        for i in xrange( 0, len(self.TrainDocVals) ):
+            if( (i+1)%10 == 0 ):
+                print "Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) )       
+            for j in xrange(0,len(self.TrainDocVals)):
+                self.SSKTrainGram[i][j] = ssk.ssk(self.TrainDocVals[i], self.TrainDocVals[j], k, lam1) +                                                                 ssk.ssk(self.TrainDocVals[i], self.TrainDocVals[j], k, lam2)
+        
+        for i in xrange( 0, len(self.TestDocVals) ):
+            if( (i+1)%10 == 0 ):
+                print "Test row %d of %d\n" % ( i+1, len(self.TestDocVals) )       
+            for j in xrange(0,len(self.TrainDocVals)):
+                self.SSKTestGram[i][j] = ssk.ssk(self.TestDocVals[i], self.TrainDocVals[j], k, lam1) +                                                                  ssk.ssk(self.TestDocVals[i], self.TrainDocVals[j], k, lam2) 
+
+        print "done"
+        res = self.do_classification(self.SSKTrainGram, self.SSKTestGram, 'SSK')
+        self.show_results_table(res[0],res[1],res[2],'SSK')
+        
     #Save/load methods for use later so we don't have to recompute (might become large)
     def save_WK_Gram(self, name):
         with open(name + 'Train.pickle', 'wb') as f1:
