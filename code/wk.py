@@ -5,9 +5,6 @@
 # Returns: Inner product <doc1, doc2> as defined by WK kernel
 #-------------------------------------------------------------------------------------
 
-#TODO: remove imports
-import pandas as pd       
-from bs4 import BeautifulSoup             
 import re
 from nltk.corpus import stopwords # Import the stop word list
 from sklearn.feature_extraction.text import CountVectorizer
@@ -31,10 +28,6 @@ def wk(doc1, doc2):
     transformer = TfidfTransformer(smooth_idf=False)
     tfidf = transformer.fit_transform(train_data_features)
     tfidf = tfidf.toarray() 
-    print "feats used: ", len(tfidf[0])
-    #print tfidf
-    #print "done"
-    #print tfidf.shape
     return np.dot(tfidf[0],tfidf[1]) #returns dot product of given 2 documents
 
 def wkFeatVecs(trainDocs, testDocs):
@@ -74,8 +67,8 @@ def wkFeatVecs(trainDocs, testDocs):
     nTestDocs = len(tfidfTest)
     GmatTest = np.ones((nTestDocs,nTrainDocs))
 
-    print "Trainmean: ", GmatTrain.mean()
-    print "Testmean: ", GmatTest.mean()
+    # print "Trainmean: ", GmatTrain.mean()
+    # print "Testmean: ", GmatTest.mean()
     
     return tfidf, tfidfTest
 
@@ -105,8 +98,6 @@ def wkGmats(trainDocs, testDocs):
     GmatTrain = np.ones((nTrainDocs,nTrainDocs))
 
     for i in xrange( 0, nTrainDocs ):
-        if( (i+1)%(nTrainDocs/5) == 0 ):
-            print "row %d of %d\n" % ( i+1, nTrainDocs )       
         for j in xrange(0,nTrainDocs):
             GmatTrain[i][j] = np.dot(tfidf[i], tfidf[j])
             
@@ -125,12 +116,10 @@ def wkGmats(trainDocs, testDocs):
     GmatTest = np.ones((nTestDocs,nTrainDocs))
 
     for i in xrange( 0, nTestDocs ):
-        if( (i+1)%(nTestDocs/5) == 0 ):
-            print "row %d of %d\n" % ( i+1, nTestDocs )       
         for j in xrange(0,nTrainDocs):
             GmatTest[i][j] = np.dot(tfidfTest[i], tfidf[j])
 
-    print "Trainmean: ", GmatTrain.mean()
-    print "Testmean: ", GmatTest.mean()
+    # print "Trainmean: ", GmatTrain.mean()
+    # print "Testmean: ", GmatTest.mean()
     
     return GmatTrain, GmatTest

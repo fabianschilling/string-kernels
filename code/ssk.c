@@ -70,8 +70,8 @@ double K(const char* s, const char* t, const int n, const double lambda) {
     for (j = 0; j < (slen + 1); ++j) {
       free(kp[i][j]);
     }
-    free(kp[i]}
-
+    free(kp[i]);
+  }
   free(kp);
 
   return sum;
