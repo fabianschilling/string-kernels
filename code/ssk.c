@@ -3,10 +3,13 @@
 #include <string.h>
 #include <stdlib.h>
 
+int count = 0;
+
 double ssk(const char* s, const char* t, const int n, const double lambda);
 double K(const char* s, const char* t, const int n, const double lambda);
 
 double ssk(const char* s, const char* t, const int n, const double lambda) {
+  printf("SSK called %d\n", ++count);
   double k1 = K(s, s, n, lambda);
   double k2 = K(t, t, n, lambda);
   double k = K(s, t, n, lambda);
@@ -63,12 +66,11 @@ double K(const char* s, const char* t, const int n, const double lambda) {
     }
   }
 
-  for (int i = 0; i < 2; ++i) {
-    for (int j = 0; j < (slen + 1); ++j) {
+  for (i = 0; i < 2; ++i) {
+    for (j = 0; j < (slen + 1); ++j) {
       free(kp[i][j]);
     }
-    free(kp[i]);
-  }
+    free(kp[i]}
 
   free(kp);
 
