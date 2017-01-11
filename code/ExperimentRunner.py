@@ -334,11 +334,32 @@ class ExperimentRunner:
             else:
                 self.compute_gram_matrices(k,lamb,WK=False,NGK=False, SSK=True)
             
-            res = self.do_classification(self.NGKTrainGram, self.NGKTestGram, 'SSK')
+            res = self.do_classification(self.SSKTrainGram, self.SSKTestGram, 'SSK')
             self.show_results_table(res[0],res[1],res[2],'SSK')
             
             return res
-    
+        
+    def run_SSKCombi_test(self, k1, k2, lamb):
+        print "computing Gram matrices"
+        #compute Gram matrix for training (train,train)
+        for i in xrange( 0, len(self.TrainDocVals) ):
+            if( (i+1)%10 == 0 ):
+                print "Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) )       
+            for j in xrange(0,len(self.TrainDocVals)):
+                self.SSKTrainGram[i][j] = ssk.ssk(self.TrainDocVals[i], self.TrainDocVals[j], k1, lamb) +                                                                 ssk.ssk(self.TrainDocVals[i], self.TrainDocVals[j], k2, lamb)
+        
+        #compute Gram matrix for testing (test,train). I believe this is correct due to:
+        # http://stats.stackexchange.com/questions/92101/prediction-with-scikit-and-an-precomputed-kernel-svm
+        for i in xrange( 0, len(self.TestDocVals) ):
+            if( (i+1)%10 == 0 ):
+                print "Test row %d of %d\n" % ( i+1, len(self.TestDocVals) )       
+            for j in xrange(0,len(self.TrainDocVals)):
+                self.SSKTestGram[i][j] = ssk.ssk(self.TestDocVals[i], self.TrainDocVals[j], k1, lamb) +                                                                  ssk.ssk(self.TestDocVals[i], self.TrainDocVals[j], k2, lamb) 
+
+        print "done"
+        res = self.do_classification(self.SSKTrainGram, self.SSKTestGram, 'SSK')
+        self.show_results_table(res[0],res[1],res[2],'SSK')
+        
     #Save/load methods for use later so we don't have to recompute (might become large)
     def save_WK_Gram(self, name):
         with open(name + 'Train.pickle', 'wb') as f1:
