@@ -181,7 +181,7 @@ class ExperimentRunner:
                 if(NGK):
                     self.NGKTrainGram[i][j] = ngk.ngk(self.TrainDocVals[i], self.TrainDocVals[j], k)
                 if(SSK):
-                    self.SSKTrainGram[i][j] = ssk.ssk(self.TrainDocVals[i], self.TrainDocVals[j], k, lamb)
+                    self.SSKTrainGram[i][j] = ssk.ssk(str(self.TrainDocVals[i]), str(self.TrainDocVals[j]), k, lamb)
         
         #compute Gram matrix for testing (test,train). I believe this is correct due to:
         # http://stats.stackexchange.com/questions/92101/prediction-with-scikit-and-an-precomputed-kernel-svm
