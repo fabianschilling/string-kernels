@@ -31,17 +31,15 @@ def wk(doc1, doc2):
     transformer = TfidfTransformer(smooth_idf=False)
     tfidf = transformer.fit_transform(train_data_features)
     tfidf = tfidf.toarray() 
+    print "feats used: ", len(tfidf[0])
     #print tfidf
     #print "done"
     #print tfidf.shape
     return np.dot(tfidf[0],tfidf[1]) #returns dot product of given 2 documents
 
-def wkGmats(trainDocs, testDocs):
-    """ Calculates the Kernels for bag of words
-        Returns:
-          GmatTrain, GmatTest]: Kernel matrix for training, Kernel matrix for testing
-    """
-    #figure out number of unique features in training set
+def wkFeatVecs(trainDocs, testDocs):
+
+    n_features_min = 2000
     vectorizer = CountVectorizer(analyzer = "word",   \
                                  tokenizer = None,    \
                                  preprocessor = None, \
@@ -49,32 +47,49 @@ def wkGmats(trainDocs, testDocs):
 
     train_data_features = vectorizer.fit_transform(trainDocs)
     train_data_features = train_data_features.toarray()
-    
-    n_features_train = len(train_data_features[0])
-    
-    #figure out number of unique features in test set
-    vectorizer = CountVectorizer(analyzer = "word",   \
-                                 tokenizer = None,    \
-                                 preprocessor = None, \
-                                 stop_words = "english") 
 
-    train_data_features = vectorizer.fit_transform(testDocs)
-    train_data_features = train_data_features.toarray()
+    transformer = TfidfTransformer(smooth_idf=False)
+    tfidf = transformer.fit_transform(train_data_features)
+    tfidf = tfidf.toarray() 
+    #print tfidf
+    #print "done"
+    #print tfidf.shape
+    nTrainDocs = len(tfidf)
+    GmatTrain = np.ones((nTrainDocs,nTrainDocs))
+            
+    n_features_train = len(tfidf[0])
     
-    #n_features_test = len(train_data_features[0])
-    n_features_test = 400
-    #use smallest feature set (otherwise dot product has size mismatch)
-    n_features_min = min(n_features_train,n_features_test)
-    print "features train: ", n_features_train
-    print "features test: ", n_features_test
-    print "features used: ", n_features_min
+    #defaultanalyzer "word" removes non-chars in preprocessing and tokenizes words. does not remove "markup tokens"
+    #stop_words should be "english" if not using clean_input_docs()
+    
+    train_data_features = vectorizer.transform(testDocs)
+    train_data_features = train_data_features.toarray()
+
+    transformer = TfidfTransformer(smooth_idf=False)
+    tfidfTest = transformer.fit_transform(train_data_features)
+    tfidfTest = tfidfTest.toarray() 
+    #print tfidf
+    #print "done"
+    #print tfidf.shape
+    nTestDocs = len(tfidfTest)
+    GmatTest = np.ones((nTestDocs,nTrainDocs))
+
+    print "Trainmean: ", GmatTrain.mean()
+    print "Testmean: ", GmatTest.mean()
+    
+    return tfidf, tfidfTest
+
+def wkGmats(trainDocs, testDocs):
+    """ Calculates the Kernels for bag of words
+        Returns:
+          GmatTrain, GmatTest]: Kernel matrix for training, Kernel matrix for testing
+    """
     
     #defaultanalyzer "word" removes non-chars in preprocessing and tokenizes words. does not remove "markup tokens"
     #stop_words should be "english" if not using clean_input_docs()
     vectorizer = CountVectorizer(analyzer = "word",   \
                                  tokenizer = None,    \
                                  preprocessor = None, \
-                                 max_features = n_features_min, \
                                  stop_words = "english") 
 
     train_data_features = vectorizer.fit_transform(trainDocs)
@@ -97,16 +112,7 @@ def wkGmats(trainDocs, testDocs):
             
     n_features_train = len(tfidf[0])
     
-    
-    #defaultanalyzer "word" removes non-chars in preprocessing and tokenizes words. does not remove "markup tokens"
-    #stop_words should be "english" if not using clean_input_docs()
-    vectorizer = CountVectorizer(analyzer = "word",   \
-                                 tokenizer = None,    \
-                                 preprocessor = None, \
-                                 max_features = n_features_min, \
-                                 stop_words = "english") 
-
-    train_data_features = vectorizer.fit_transform(testDocs)
+    train_data_features = vectorizer.transform(testDocs)
     train_data_features = train_data_features.toarray()
 
     transformer = TfidfTransformer(smooth_idf=False)
@@ -122,6 +128,9 @@ def wkGmats(trainDocs, testDocs):
         if( (i+1)%(nTestDocs/5) == 0 ):
             print "row %d of %d\n" % ( i+1, nTestDocs )       
         for j in xrange(0,nTrainDocs):
-            GmatTrain[i][j] = np.dot(tfidfTest[i], tfidf[j])
+            GmatTest[i][j] = np.dot(tfidfTest[i], tfidf[j])
 
+    print "Trainmean: ", GmatTrain.mean()
+    print "Testmean: ", GmatTest.mean()
+    
     return GmatTrain, GmatTest

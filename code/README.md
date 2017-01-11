@@ -1,1 +1,7 @@
-Here goes the implementation
+# Install
+
+Run
+
+```sh
+swig -python ssk.i
+```
