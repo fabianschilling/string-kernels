@@ -1,3 +1,5 @@
 \section{Discussion} \label{sec:discussion}
-Blablablablabla
 
+From an evaluation metric perspective, one reason for the underwhelming performance of SSK is that (non-contiguous) subsequences in natural language often do not carry interesting semantic information. For example, consider the documents \say{cat} and \say{cart}. Both strings arguably have no semantic similarity but contain many common substrings and are very similar in terms of the kernel. Conversely, the concepts \say{car} and \say{vehicle} are semantically very similar but have no common substrings at all, leading to a low SSK similarity. We acknowledge the validity of the string subsequence kernel for other types of data, for example biological subsequences such as DNA. In fact, the kernel has been used to predict epitopes in the field of molecular biology \cite{biology}.
+
+From a efficiency perspective, SSK is a very computationally heavy endeavor, especially when the number of training examples is high. The problem is that the computation of the entire Gram matrix is very expensive and does not scale with the size of the dataset. Kernel methods are generally very efficient when the dimensionality of the input is high as is the case for natural language data. However, this positive effect is diminished if the dataset is too large, which is the case for most interesting problems.

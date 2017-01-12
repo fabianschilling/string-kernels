@@ -55,12 +55,7 @@ def compute_kernel_matrix (docs, lam, k, kernel, norms):
 
     return kernel
 
-def ssk (doc1,doc2, k=2, lam=0.5):
-    # if len(s)==0 or len(t) == 0:
-        # return wrong
-    # size = 2, len(s), len(t)
-    print lam, k
-
+def ssk (doc1, doc2, k=2, lam=0.5):
     size = 2, 2
     kernel = np.zeros(size, dtype=np.float32)
     norms = np.zeros(2, dtype=np.float32)
@@ -70,17 +65,23 @@ def ssk (doc1,doc2, k=2, lam=0.5):
     doc_t = [doc2, doc2]
     norms[0] = get_kernel(doc_s, k, lam)
     norms[1] = get_kernel(doc_t, k, lam)
-
+ 
     for i in xrange(2):
         kernel[i,i] = 1
 
-    kernel = compute_kernel_matrix([doc1, doc2], lam, k, kernel, norms);
+    # kernel = compute_kernel_matrix([doc1, doc2], lam, k, kernel, norms);
+
+    iner_pro = get_kernel([doc1, doc2], k, lam)
+    iner_pro = iner_pro/math.sqrt(norms[0] * norms[1])
+
+    print iner_pro
+    return iner_pro
     #print kernel
 
 def main(args):
     docs = ["science is organized knowledge", "wisdom is organized life"]
     # s, t = "cat", "card"
-    ssk(docs[0],docs[1], 0.5, 2)
+    ssk(docs[0],docs[1], 2, 0.5)
 
     
 if __name__ == '__main__':
