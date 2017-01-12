@@ -29,7 +29,7 @@ double* sskUpTo(const char* s, const char* t, const int n, const double lambda) 
   {
     Ki[i] = Ki[i] / sqrt(Kiss[i] * Kitt[i]);
   }
-  printf("b4return\n");
+  //printf("b4return\n");
   return Ki;
 }
 
@@ -76,7 +76,7 @@ double K(const char* s, const char* t, const int n, const double lambda, double*
     }
         if(upTo)
 	{
-          printf("in upto %d\n", i);
+          //printf("in upto %d\n", i);
           sumi = 0;
 	  for (int ii = i; ii < slen + 1; ++ii) {
 	    for (int ji = i; ji < tlen + 1; ++ji) {
@@ -86,11 +86,11 @@ double K(const char* s, const char* t, const int n, const double lambda, double*
 	    }
 	  }
           Ki[i] = sumi;
-          printf("out of upto\n");
+          //printf("out of upto\n");
 	}
   }
 
-  printf("calculating last\n");
+  //printf("calculating last\n");
   for (i = n; i < slen + 1; ++i) {
     for (j = n; j < tlen + 1; ++j) {
       if (s[i - 1] == t[j - 1]) {
