@@ -163,17 +163,17 @@ class ExperimentRunner:
     
         self.prepare_data()
         
-        self.WKTestGram = np.ones((len(self.TestDocVals),len(self.TrainDocVals)))
-        self.WKTrainGram = np.ones((len(self.TrainDocVals),len(self.TrainDocVals)))
+        self.WKTestGram = np.zeros((len(self.TestDocVals),len(self.TrainDocVals)))
+        self.WKTrainGram = np.zeros((len(self.TrainDocVals),len(self.TrainDocVals)))
 
-        self.NGKTestGram = np.ones((len(self.TestDocVals),len(self.TrainDocVals)))
-        self.NGKTrainGram = np.ones((len(self.TrainDocVals),len(self.TrainDocVals)))
+        self.NGKTestGram = np.zeros((len(self.TestDocVals),len(self.TrainDocVals)))
+        self.NGKTrainGram = np.zeros((len(self.TrainDocVals),len(self.TrainDocVals)))
 
-        self.SSKTestGram = np.ones((len(self.TestDocVals),len(self.TrainDocVals)))
-        self.SSKTrainGram = np.ones((len(self.TrainDocVals),len(self.TrainDocVals)))
+        self.SSKTestGram = np.zeros((len(self.TestDocVals),len(self.TrainDocVals)))
+        self.SSKTrainGram = np.zeros((len(self.TrainDocVals),len(self.TrainDocVals)))
         
-        self.SSKTestGramUpTo = np.ones((15, len(self.TestDocVals),len(self.TrainDocVals)))
-        self.SSKTrainGramUpTo = np.ones((15, len(self.TrainDocVals),len(self.TrainDocVals)))
+        self.SSKTestGramUpTo = np.zeros((15, len(self.TestDocVals),len(self.TrainDocVals)))
+        self.SSKTrainGramUpTo = np.zeros((15, len(self.TrainDocVals),len(self.TrainDocVals)))
 
     def compute_gram_matrices(self,k=2,lamb=0.5, WK=True, NGK = True, SSK = True):
         """ Computes Kernel matrices for WK, NGK and SSK for use in tests
