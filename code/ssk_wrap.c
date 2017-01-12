@@ -3017,6 +3017,8 @@ static swig_module_info swig_module = {swig_types, 1, 0, 0, 0, 0};
 
 
 extern double ssk(char* s, char* t, int n, double lambda);
+extern double* sskUpTo(char* s, char* t, int n, double lambda);
+
 
 
 SWIGINTERN swig_type_info*
@@ -3345,9 +3347,72 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_sskUpTo(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  char *arg1 = (char *) 0 ;
+  char *arg2 = (char *) 0 ;
+  int arg3 ;
+  double arg4 ;
+  int res1 ;
+  char *buf1 = 0 ;
+  int alloc1 = 0 ;
+  int res2 ;
+  char *buf2 = 0 ;
+  int alloc2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  double *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:sskUpTo",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "sskUpTo" "', argument " "1"" of type '" "char *""'");
+  }
+  arg1 = (char *)(buf1);
+  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "sskUpTo" "', argument " "2"" of type '" "char *""'");
+  }
+  arg2 = (char *)(buf2);
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "sskUpTo" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = (int)(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "sskUpTo" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = (double)(val4);
+  result = (double *)sskUpTo(arg1,arg2,arg3,arg4);
+  {
+    int i;
+    resultobj = PyList_New(14);
+    for (i = 0; i < 14; i++) {
+      PyObject *o = PyFloat_FromDouble((double) result[i]);
+      PyList_SetItem(resultobj,i,o);
+    }
+  }
+  if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  return resultobj;
+fail:
+  if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { (char *)"ssk", _wrap_ssk, METH_VARARGS, NULL},
+	 { (char *)"sskUpTo", _wrap_sskUpTo, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 

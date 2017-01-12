@@ -3,18 +3,40 @@
 #include <string.h>
 #include <stdlib.h>
 
+
+int upTo = 0;
+double Ki[14] = {1};
+double Kiss[14] = {1};
+double Kitt[14] = {1};
+
 double ssk(const char* s, const char* t, const int n, const double lambda);
-double K(const char* s, const char* t, const int n, const double lambda);
+double K(const char* s, const char* t, const int n, const double lambda, double* Ki);
 
 double ssk(const char* s, const char* t, const int n, const double lambda) {
-  double k1 = K(s, s, n, lambda);
-  double k2 = K(t, t, n, lambda);
-  double k = K(s, t, n, lambda);
+  double k1 = K(s, s, n, lambda, Ki);
+  double k2 = K(t, t, n, lambda, Ki);
+  double k = K(s, t, n, lambda, Ki);
   return k / sqrt(k1 * k2);
 }
 
-double K(const char* s, const char* t, const int n, const double lambda) {
+double* sskUpTo(const char* s, const char* t, const int n, const double lambda) {
+  upTo = 1;
+
+  double k1 = K(s, s, n, lambda, Kiss);
+  double k2 = K(t, t, n, lambda, Kitt);
+  double k = K(s, t, n, lambda, Ki);
+
+  for(int i = 0; i < 14; i++)
+  {
+    Ki[i] = Ki[i] / sqrt(Kiss[i] * Kitt[i]);
+  }
+  printf("b4return\n");
+  return Ki;
+}
+
+double K(const char* s, const char* t, const int n, const double lambda, double* Ki) {
   double sum = 0.0;
+  double sumi = 0.0;
   const int slen = strlen(s);
   const int tlen = strlen(t);
   double ***kp =  (double ***) malloc(2 * sizeof(double **));
@@ -53,8 +75,23 @@ double K(const char* s, const char* t, const int n, const double lambda) {
         kp[i % 2][j][m] = lambda * kp[i % 2][j - 1][m] + kpp;
       }
     }
+        if(upTo)
+	{
+          printf("in upto %d\n", i);
+          sumi = 0;
+	  for (int ii = i; ii < slen + 1; ++ii) {
+	    for (int ji = i; ji < tlen + 1; ++ji) {
+	      if (s[ii - 1] == t[ji - 1]) {
+		sumi += lambda * lambda * kp[(i - 1) % 2][ii - 1][ji - 1];
+	      }
+	    }
+	  }
+          Ki[i] = sumi;
+          printf("out of upto\n");
+	}
   }
 
+  printf("calculating last\n");
   for (i = n; i < slen + 1; ++i) {
     for (j = n; j < tlen + 1; ++j) {
       if (s[i - 1] == t[j - 1]) {

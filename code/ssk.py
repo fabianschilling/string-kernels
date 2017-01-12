@@ -94,6 +94,10 @@ except AttributeError:
 def ssk(s, t, n, arg4):
     return _ssk.ssk(s, t, n, arg4)
 ssk = _ssk.ssk
+
+def sskUpTo(s, t, n, arg4):
+    return _ssk.sskUpTo(s, t, n, arg4)
+sskUpTo = _ssk.sskUpTo
 # This file is compatible with both classic and new-style classes.
 
 

@@ -28,14 +28,14 @@ class ExperimentRunner:
     CRUDE = 2
     CORN = 3
     
-    EARN_N_TRAIN = 10
-    EARN_N_TEST = 8
-    ACQ_N_TRAIN = 10
-    ACQ_N_TEST = 8
-    CRUDE_N_TRAIN = 10
-    CRUDE_N_TEST = 8
-    CORN_N_TRAIN = 10
-    CORN_N_TEST = 8
+    EARN_N_TRAIN = 5
+    EARN_N_TEST = 4
+    ACQ_N_TRAIN = 5
+    ACQ_N_TEST = 4
+    CRUDE_N_TRAIN = 5
+    CRUDE_N_TEST = 4
+    CORN_N_TRAIN = 5
+    CORN_N_TEST = 4
     
     # EARN_N_TRAIN = 152
     # EARN_N_TEST = 40
@@ -162,6 +162,9 @@ class ExperimentRunner:
 
         self.SSKTestGram = np.ones((len(self.TestDocVals),len(self.TrainDocVals)))
         self.SSKTrainGram = np.ones((len(self.TrainDocVals),len(self.TrainDocVals)))
+        
+        self.SSKTestGramUpTo = np.ones((15, len(self.TestDocVals),len(self.TrainDocVals)))
+        self.SSKTrainGramUpTo = np.ones((15, len(self.TrainDocVals),len(self.TrainDocVals)))
 
     def compute_gram_matrices(self,k=2,lamb=0.5, WK=True, NGK = True, SSK = True):
         """ Computes Kernel matrices for WK, NGK and SSK for use in tests
@@ -330,7 +333,7 @@ class ExperimentRunner:
                     fscore: F1 score for all categories    
             """
             if SSKGramFileName != "":
-                self.load_NGK_Gram(SSKGramFileName)
+                self.load_SSK_Gram(SSKGramFileName)
             else:
                 self.compute_gram_matrices(k,lamb,WK=False,NGK=False, SSK=True)
             
@@ -400,6 +403,47 @@ class ExperimentRunner:
         print "done"
         res = self.do_classification(self.SSKTrainGram, self.SSKTestGram, 'SSK')
         self.show_results_table(res[0],res[1],res[2],'SSK')
+        
+    def get_save_SSKMat_upto(self, k=5, lamb=0.5, SSKGramFileName = "SSKsOf"):
+        """ Performs classification test with SSK method
+                Args:
+                    k: length (subsequence length for SSK)
+                    lamb: Decay factor for SSK
+                    SSKGramFileName: filename for pre-computed WK gram matrix (optional) 
+                Returns:
+                    [precision,recall,fscore] 3 x n_categories
+                    precision: precision score for all categories
+                    recall: recall score for all categories
+                    fscore: F1 score for all categories    
+        """
+
+        print "computing Gram matrices"
+        #compute Gram matrix for training (train,train)
+        for i in xrange( 0, len(self.TrainDocVals) ):
+            if( (i+1)%10 == 0 ):
+                print "Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) )       
+            for j in xrange(0,len(self.TrainDocVals)):
+                ssksUpTo = ssk.sskUpTo(str(self.TrainDocVals[i]), str(self.TrainDocVals[j]), k, lamb)
+                for ki in range(0,k): 
+                    self.SSKTrainGramUpTo[ki][i][j] = ssksUpTo[ki]
+        #compute Gram matrix for testing (test,train). I believe this is correct due to:
+        # http://stats.stackexchange.com/questions/92101/prediction-with-scikit-and-an-precomputed-kernel-svm
+        for i in xrange( 0, len(self.TestDocVals) ):
+            if( (i+1)%10 == 0 ):
+                print "Test row %d of %d\n" % ( i+1, len(self.TestDocVals) )       
+            for j in xrange(0,len(self.TrainDocVals)):
+                ssksUpTo = ssk.sskUpTo(str(self.TestDocVals[i]), str(self.TrainDocVals[j]), k, lamb)
+                for ki in range(0,k): 
+                    self.SSKTestGramUpTo[ki][i][j] = ssksUpTo[ki]
+        
+        for ki in range(0,k): 
+            with open(SSKGramFileName + str(ki) + 'Train.pickle', 'wb') as f1:
+                pickle.dump(self.SSKTrainGramUpTo[ki], f1)
+        
+            with open(SSKGramFileName + str(ki) + 'Test.pickle', 'wb') as f2:
+                pickle.dump(self.SSKTestGramUpTo[ki], f2)
+            
+        print "saved SSKs up to ", k, "in: ", SSKGramFileName
         
     #Save/load methods for use later so we don't have to recompute (might become large)
     def save_WK_Gram(self, name):
