@@ -1,12 +1,32 @@
 \section{Method} \label{sec:method}
 
-We aim to replicate the results presented in \cite{kernels} by comparing three different string kernels in terms of their text categorization performance.
+We aim to replicate the results presented in \cite{ssk} by comparing three different string kernels in terms of their text categorization performance. The kernels can be seen as measuring the similary between two text documents and are namely: the word kernel (WK) based on the bag-of-words model, the $n$-gram kernel (NGK) based on the $n$-gram representation, and the string subsequence kernel (SSK) which is based on substrings. In the following, we outline the internal workings of the three kernels based on simple examples.
 
-The three kernels can be seen as measuring the similary between two text documents and are namely: the word kernel (WK) based on the bag-of-words model, the $n$-gram kernel (NGK) based on the $n$-gram representation, and the string subsequence kernel (SSK) \cite{ssk} which is based on substrings.
+The word kernel is arguably the simplest one since it merely counts the frequencies of the words in both documents and computes the inner product of the resulting vectors. For the documents $d_1 = $ \say{science is organized knowledge} and $d_2 = $ \say{wisdom is organized life}, the kernel is computes as
 
-We employ these custom string kernels in conjunction with a support vector machine (SVM) implementation from the machine learning library Scikit-learn \cite{sklearn}.
+\begin{equation} \label{eq:wk}
+  K_\text{WK}(d_1, d_2) = \left\langle \phi(d_1), \phi(d_2) \right\rangle = [1, 1, 1, 1, 0, 0] \cdot [0, 1, 1, 0, 1, 1]^T = 2
+\end{equation}
 
-We assess the text classification performance on the popular ModApte split of the Reuters-21578 dataset which contains news articles from $80$ categories such as \textit{earn}, \textit{acquisition}, \textit{crude}, and \textit{corn}. The dataset is easily obtained using the Natural Language Toolkit (NLTK) \cite{nltk}.
+where $\phi$ is the transformation from the text to the vector representation and the indices of the vector are given in the order \say{science}, \say{is}, \say{orgnanized}, \say{knowledge}, \say{wisdom}, and \say{life}.
+
+The $n$-gram kernel works in a similar way, except the frequencies of individual $n$-grams are counted instead of entire words. The authors compute $n$-gram features based on character-level $n$-grams. Consider the documents $d_1 = $ \say{car} and $d_2 = $ \say{cat}. The character level $2$-gram kernel is calculated as
+
+\begin{equation} \label{eq:ngk}
+ K_\text{NGK}(d_1, d_2) = \left\langle \phi(d_1), \phi(d_2) \right\rangle = [1, 1, 0] \cdot [1, 0, 1]^T = 1
+\end{equation}
+
+where the transformation $\phi$ is has the indices \say{ca}, \say{ar}, and \say{at}.
+
+The problem with both WK and NGK is that it puts too much importance on words that appear frequently in the corpus but are not at all discriminative. For the english language, those might be words such as \say{is} or \say{and}. Two documents that consist of many of these character sequences do not generally have the same semantic content and the authors therefore resort to a popular weighting scheme called term-frequency inverse document-frequency, or \textit{tf-idf} for short.
+
+The string subsequnce kernel is considerably more computationally expensive since it considers not only characters that directly follow each other but also those that are non-contiguous.
+
+% TODO: explain the SSK kernel in detail
+
+We employ these custom string kernels in conjunction with a support vector machine implementation from the machine learning library Scikit-learn \cite{sklearn}. The library features the option performing the classification directly on the precomputed Gram matrix.
+
+We assess the text classification performance on the popular \say{ModApte} split of the Reuters-21578 dataset which contains news articles from $80$ categories such as \textit{earn}, \textit{acquisition}, \textit{crude}, and \textit{corn}. The dataset is easily obtained using the Natural Language Toolkit (NLTK) \cite{nltk}.
 
 We train the kernel SVM and test the classification performance on a self-constructed train/test split of the Reuters dataset that contains the four categories mentioned above. Our evaluation metrics are: precision, recall, and F1-score. The classification results are obtained using different hyperparameters of the respective kernel.
 
