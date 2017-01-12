@@ -37,23 +37,23 @@ class ExperimentRunner:
     #CORN_N_TRAIN = 5
     #CORN_N_TEST = 4
     
-    EARN_N_TRAIN = 10
-    EARN_N_TEST = 8
-    ACQ_N_TRAIN = 10
-    ACQ_N_TEST = 8
-    CRUDE_N_TRAIN = 10
-    CRUDE_N_TEST = 8
-    CORN_N_TRAIN = 10
-    CORN_N_TEST = 8
+    #EARN_N_TRAIN = 10
+    #EARN_N_TEST = 8
+    #ACQ_N_TRAIN = 10
+    #ACQ_N_TEST = 8
+    #CRUDE_N_TRAIN = 10
+    #CRUDE_N_TEST = 8
+    #CORN_N_TRAIN = 10
+    #CORN_N_TEST = 8
     
-    # EARN_N_TRAIN = 152
-    # EARN_N_TEST = 40
-    # ACQ_N_TRAIN = 114
-    # ACQ_N_TEST = 25
-    # CRUDE_N_TRAIN = 76
-    # CRUDE_N_TEST = 15
-    # CORN_N_TRAIN = 38
-    # CORN_N_TEST = 10
+    EARN_N_TRAIN = 152
+    EARN_N_TEST = 40
+    ACQ_N_TRAIN = 114
+    ACQ_N_TEST = 25
+    CRUDE_N_TRAIN = 76
+    CRUDE_N_TEST = 15
+    CORN_N_TRAIN = 38
+    CORN_N_TEST = 10
     
     def show_results_table(self,precision,recall,fscore,Ktype):
         #show table with results

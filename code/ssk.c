@@ -20,14 +20,17 @@ double ssk(const char* s, const char* t, const int n, const double lambda) {
 }
 
 double* sskUpTo(const char* s, const char* t, const int n, const double lambda) {
+  //printf("start\n");
   upTo = 1;
   double k1 = K(s, s, n, lambda, Kiss);
   double k2 = K(t, t, n, lambda, Kitt);
   double k = K(s, t, n, lambda, Ki);
-
+  //printf("mid\n");
   for(int i = 0; i < 15; i++)
   {
+    //printf("Ki: %d\n", i);
     Ki[i] = Ki[i] / sqrt(Kiss[i] * Kitt[i]);
+    //printf("post\n");
   }
   //printf("b4return\n");
   return Ki;
@@ -38,6 +41,9 @@ double K(const char* s, const char* t, const int n, const double lambda, double*
   double sumi = 0.0;
   const int slen = strlen(s);
   const int tlen = strlen(t);
+
+  //printf("premalloc\n");
+
   double ***kp =  (double ***) malloc(2 * sizeof(double **));
   for (int i = 0; i < 2; ++i) {
     kp[i] = (double **) malloc((slen + 1) * sizeof(double *));
@@ -45,6 +51,7 @@ double K(const char* s, const char* t, const int n, const double lambda, double*
       kp[i][j] = (double *) malloc((tlen + 1) * sizeof(double));
     }
   }
+  //printf("postmalloc\n");
   int m, i, j;
   double kpp;
 
@@ -58,10 +65,12 @@ double K(const char* s, const char* t, const int n, const double lambda, double*
 
   for (i = 1; i < n; ++i) {
     for (j = i - 1; j < slen; ++j) {
-      kp[i % 2][j][i - 1] = 0.0;
+      if((i-1) < (tlen + 1))
+        kp[i % 2][j][i - 1] = 0.0;
     }
     for (j = i - 1; j < tlen; ++j) {
-      kp[i % 2][i - 1][j] = 0.0;
+      if((i-1) < (slen + 1))
+        kp[i % 2][i - 1][j] = 0.0;
     }
     for (j = i; j < slen; ++j) {
       kpp = 0.0;
@@ -99,15 +108,19 @@ double K(const char* s, const char* t, const int n, const double lambda, double*
     }
   }
 
+  //printf("Kpreloopfree\n");
   for (int i = 0; i < 2; ++i) {
     for (int j = 0; j < (slen + 1); ++j) {
       free(kp[i][j]);
+      //printf("freed j:%d/%d n=%d\n", j,slen,n);
     }
     free(kp[i]);
   }
-
+  //printf("Kpostloopfree\n");
   free(kp);
-  Ki[n] = sumi;
+  //printf("Kpfree\n");
+  Ki[n] = sum;
+  //printf("Kreturn\n");
   return sum;
 }
 
