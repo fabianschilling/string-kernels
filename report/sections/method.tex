@@ -16,7 +16,7 @@ The $n$-gram kernel works in a similar way, except the frequencies of individual
  K_\text{NGK}(d_1, d_2) = \left\langle \phi(d_1) \cdot \phi(d_2) \right\rangle = [1, 1, 0] \cdot [1, 0, 1]^T = 1
 \end{equation}
 
-where the mapping $\phi$ has the index order \say{c-a}, \say{a-r}, and \say{a-t}.
+where the mapping $\phi$ has the index order \say{c-a}, \say{a-r}, and \say{a-t}. Notice that we omitted $n$-grams containing whitespaces for clarity and simplicity.
 
 The problem with both WK and NGK is that it puts too much importance on words that appear frequently in the corpus but are not at all discriminative. For the english language, those might be words such as \say{is} or \say{and}. Two documents that consist of many of these character sequences do not generally have the same semantic content and the authors therefore resort to a popular weighting scheme called term-frequency inverse document-frequency, or \textit{tf-idf} for short.
 
@@ -33,7 +33,7 @@ where the indices of the mapping $\phi$ correspond to \say{c-a}, \say{a-r}, \say
 In order to obtain a kernel that is invariant of the document length, we can compute the normalized kernel $\hat{K}$ as in
 
 \begin{equation}
-  \hat{K}_\text{SSK}(d_1, d_2) = \frac{K_\text{SSK}(d_1, d_2)}{\sqrt{K_\text{SSK}(d_1, d_1) K_\text{SSK}(d_2, d_2)}}
+  \hat{K}_\text{SSK}(d_1, d_2) = \frac{K_\text{SSK}(d_1, d_2)}{\sqrt{K_\text{SSK}(d_1, d_1) \cdot K_\text{SSK}(d_2, d_2)}}
 \end{equation}
 
 
@@ -44,7 +44,6 @@ We assess the text classification performance on the popular \textit{ModApte} sp
 
 We train the kernel SVM and test the classification performance on a self-constructed train/test split of the dataset that contains the four categories mentioned above. Our evaluation metrics are: precision, recall, and F1-score. The classification results are obtained using different hyperparameters of the respective kernel.
 
-% TODO: maybe a table with hyperparameters that we're experimenting with
 % TODO: we should definitely mention the (comparatively) shitty performance of SSK in their experiments
 % TODO: are we getting any noteworthy speed improvements by using SSK?
 % TODO: should we compare this to word2vec just for fun and see what comes out?
