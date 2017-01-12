@@ -28,14 +28,23 @@ class ExperimentRunner:
     CRUDE = 2
     CORN = 3
     
-    EARN_N_TRAIN = 5
-    EARN_N_TEST = 4
-    ACQ_N_TRAIN = 5
-    ACQ_N_TEST = 4
-    CRUDE_N_TRAIN = 5
-    CRUDE_N_TEST = 4
-    CORN_N_TRAIN = 5
-    CORN_N_TEST = 4
+    #EARN_N_TRAIN = 5
+    #EARN_N_TEST = 4
+    #ACQ_N_TRAIN = 5
+    #ACQ_N_TEST = 4
+    #CRUDE_N_TRAIN = 5
+    #CRUDE_N_TEST = 4
+    #CORN_N_TRAIN = 5
+    #CORN_N_TEST = 4
+    
+    EARN_N_TRAIN = 10
+    EARN_N_TEST = 8
+    ACQ_N_TRAIN = 10
+    ACQ_N_TEST = 8
+    CRUDE_N_TRAIN = 10
+    CRUDE_N_TEST = 8
+    CORN_N_TRAIN = 10
+    CORN_N_TEST = 8
     
     # EARN_N_TRAIN = 152
     # EARN_N_TEST = 40
@@ -178,7 +187,7 @@ class ExperimentRunner:
         for i in xrange( 0, len(self.TrainDocVals) ):
             if( (i+1)%10 == 0 ):
                 print "Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) )       
-            for j in xrange(0,len(self.TrainDocVals)):
+            for j in xrange(i,len(self.TrainDocVals)):
                 if(WK):
                     self.WKTrainGram[i][j] = wk.wk(self.TrainDocVals[i], self.TrainDocVals[j])
                 if(NGK):
@@ -199,6 +208,8 @@ class ExperimentRunner:
                 if(SSK):
                     self.SSKTestGram[i][j] = ssk.ssk(str(self.TestDocVals[i]), str(self.TrainDocVals[j]), k, lamb)
 
+        self.SSKTrainGram = self.SSKTrainGram + self.SSKTrainGram.T - np.diag(np.diag(self.SSKTrainGram))
+        
         print "done"
 
     def do_classification(self, trainKernel, testKernel, Ktype):
@@ -422,7 +433,7 @@ class ExperimentRunner:
         for i in xrange( 0, len(self.TrainDocVals) ):
             if( (i+1)%10 == 0 ):
                 print "Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) )       
-            for j in xrange(0,len(self.TrainDocVals)):
+            for j in xrange(i,len(self.TrainDocVals)):
                 ssksUpTo = ssk.sskUpTo(str(self.TrainDocVals[i]), str(self.TrainDocVals[j]), k, lamb)
                 for ki in range(0,k+1): 
                     self.SSKTrainGramUpTo[ki][i][j] = ssksUpTo[ki]
@@ -437,9 +448,10 @@ class ExperimentRunner:
                     self.SSKTestGramUpTo[ki][i][j] = ssksUpTo[ki]
         
         for ki in range(0,k+1): 
+            refMat = self.SSKTrainGramUpTo[ki] + self.SSKTrainGramUpTo[ki].T - np.diag(np.diag(self.SSKTrainGramUpTo[ki]))
             with open(SSKGramFileName + str(ki) + 'Train.pickle', 'wb') as f1:
-                pickle.dump(self.SSKTrainGramUpTo[ki], f1)
-        
+                pickle.dump(refMat, f1)
+                                               
             with open(SSKGramFileName + str(ki) + 'Test.pickle', 'wb') as f2:
                 pickle.dump(self.SSKTestGramUpTo[ki], f2)
             
