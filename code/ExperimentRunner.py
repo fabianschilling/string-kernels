@@ -181,7 +181,9 @@ class ExperimentRunner:
             k: length (n-gram order for NGK, subsequence length for SSK)
             lamb: Decay factor for SSK
           """
-
+        #have to reset the traingram otherwise old data makes the reflection wrong...
+        self.SSKTrainGram = np.zeros((len(self.TrainDocVals),len(self.TrainDocVals)))
+        
         print "computing Gram matrices"
         #compute Gram matrix for training (train,train)
         for i in xrange( 0, len(self.TrainDocVals) ):
