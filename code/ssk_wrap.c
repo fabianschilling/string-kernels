@@ -3393,8 +3393,8 @@ SWIGINTERN PyObject *_wrap_sskUpTo(PyObject *SWIGUNUSEDPARM(self), PyObject *arg
   result = (double *)sskUpTo(arg1,arg2,arg3,arg4);
   {
     int i;
-    resultobj = PyList_New(14);
-    for (i = 0; i < 14; i++) {
+    resultobj = PyList_New(15);
+    for (i = 0; i < 15; i++) {
       PyObject *o = PyFloat_FromDouble((double) result[i]);
       PyList_SetItem(resultobj,i,o);
     }

@@ -5,9 +5,9 @@
 
 
 int upTo = 0;
-double Ki[14] = {1};
-double Kiss[14] = {1};
-double Kitt[14] = {1};
+double Ki[15] = {1};
+double Kiss[15] = {1};
+double Kitt[15] = {1};
 
 double ssk(const char* s, const char* t, const int n, const double lambda);
 double K(const char* s, const char* t, const int n, const double lambda, double* Ki);
@@ -21,12 +21,11 @@ double ssk(const char* s, const char* t, const int n, const double lambda) {
 
 double* sskUpTo(const char* s, const char* t, const int n, const double lambda) {
   upTo = 1;
-
   double k1 = K(s, s, n, lambda, Kiss);
   double k2 = K(t, t, n, lambda, Kitt);
   double k = K(s, t, n, lambda, Ki);
 
-  for(int i = 0; i < 14; i++)
+  for(int i = 0; i < 15; i++)
   {
     Ki[i] = Ki[i] / sqrt(Kiss[i] * Kitt[i]);
   }
@@ -108,7 +107,7 @@ double K(const char* s, const char* t, const int n, const double lambda, double*
   }
 
   free(kp);
-
+  Ki[n] = sumi;
   return sum;
 }
 

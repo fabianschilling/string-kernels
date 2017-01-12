@@ -424,7 +424,7 @@ class ExperimentRunner:
                 print "Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) )       
             for j in xrange(0,len(self.TrainDocVals)):
                 ssksUpTo = ssk.sskUpTo(str(self.TrainDocVals[i]), str(self.TrainDocVals[j]), k, lamb)
-                for ki in range(0,k): 
+                for ki in range(0,k+1): 
                     self.SSKTrainGramUpTo[ki][i][j] = ssksUpTo[ki]
         #compute Gram matrix for testing (test,train). I believe this is correct due to:
         # http://stats.stackexchange.com/questions/92101/prediction-with-scikit-and-an-precomputed-kernel-svm
@@ -433,10 +433,10 @@ class ExperimentRunner:
                 print "Test row %d of %d\n" % ( i+1, len(self.TestDocVals) )       
             for j in xrange(0,len(self.TrainDocVals)):
                 ssksUpTo = ssk.sskUpTo(str(self.TestDocVals[i]), str(self.TrainDocVals[j]), k, lamb)
-                for ki in range(0,k): 
+                for ki in range(0,k+1): 
                     self.SSKTestGramUpTo[ki][i][j] = ssksUpTo[ki]
         
-        for ki in range(0,k): 
+        for ki in range(0,k+1): 
             with open(SSKGramFileName + str(ki) + 'Train.pickle', 'wb') as f1:
                 pickle.dump(self.SSKTrainGramUpTo[ki], f1)
         
