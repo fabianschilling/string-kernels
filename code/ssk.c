@@ -78,10 +78,10 @@ double K(const char* s, const char* t, const int n, const double lambda) {
 }
 
 int main(int argc, char** argv) {
-  char s[] = "science is organized knowledge";
-  char t[] = "wisdom is organized life";
+  char s[] = "mar mar";
+  char t[] = "hello world";
 
-  printf("%lf\n", ssk(s, t, 3, 0.5));
+  printf("%f\n", ssk(s, t, 14, 0.5));
   return 0;
 }
 
