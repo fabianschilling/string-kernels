@@ -1,3 +1,11 @@
 \begin{abstract}
-In this paper an approach for text document categorization is proposed using SVMs together with a unique string kernel. The inner product defined by the kernel is calculated for all ordered character sequences of a defined length, k, and are not restricted to being contiguous. An exponentially decaying factor is used to weight these subsequences based on their length in the text, penalizing those which are less contiguous. We also present an efficient dynamic programming technique for calculating the inner product, keeping the evaluation of the kernel tractable despite the exponential growth of the feature space with respect to k. The performance of the proposed approach is compared to that of using a standard word feature space kernel \cite{Joachims1998}, and a kernel utilizing contiguous character sequences defined by n-grams \cite{Cavnar1995}. Evaluation of experimental results show that the proposed method performs comparatively to these alternatives [TODO: depending on what we get, revise this].
+
+Lohdi et. al \cite{ssk} present a string subsequence kernel (SSK) for sequential input such as text or biological data. The similarity measure defined by the kernel is calculated from all ordered character subsequences of length $k$ shared between two inputs. The subsequnce does not have to be contiguous which is accounted for by an exponentially decaying factor $\lambda$ that penalizes distance within the sequence. To make the kernel computation tractable, the paper outlines an efficient implementation that relies on dynamic programming technqiues and is outlined in the paper.
+
+The authors evaluate the kernel by categorizing news articles using a support vector machine since the dual formulation can be optimized using only inner products between inputs. The kernel is compared against two other string kernels which are based on the bag-of-words model and $n$-grams, respectively.
+
+Our experiments reveal that even with heavy optimization, computing the full Gram matrix is intractable for large datasets. For natural language data, the comparatively simple $n$-gram kernel leads to impressive classification performance in only a fraction of the time and we cannot recommend the use of SSK in general.
+
+%TODO: here we write about what we find
+
 \end{abstract}
