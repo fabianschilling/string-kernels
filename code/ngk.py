@@ -67,17 +67,12 @@ def ngkGmats(trainDocs,testDocs, n=2, mode='char', norm=True):
     ngkTrainKmat = np.ones((nTrainDocs,nTrainDocs))
 
     for i in xrange( 0, nTrainDocs ):
-        if( (i+1)%(nTrainDocs/5) == 0 ):
-            print "row %d of %d\n" % ( i+1, nTrainDocs )       
         for j in xrange(0,nTrainDocs):
             ngkTrainKmat[i][j] = np.dot(featVecsTrain[i], featVecsTrain[j])
-            
     
     ngkTestKmat = np.ones((nTestDocs,nTrainDocs))
 
     for i in xrange( 0, nTestDocs ):
-        if( (i+1)%(nTestDocs/5) == 0 ):
-            print "row %d of %d\n" % ( i+1, nTestDocs )       
         for j in xrange(0,nTrainDocs):
             ngkTestKmat[i][j] = np.dot(featVecsTest[i], featVecsTrain[j])
     

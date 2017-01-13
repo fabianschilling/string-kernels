@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-
+int count = 0;
 int upTo = 0;
 double Ki[15] = {1};
 double Kiss[15] = {1};
@@ -13,9 +13,10 @@ double ssk(const char* s, const char* t, const int n, const double lambda);
 double K(const char* s, const char* t, const int n, const double lambda, double* Ki);
 
 double ssk(const char* s, const char* t, const int n, const double lambda) {
-  double k1 = K(s, s, n, lambda, Ki);
-  double k2 = K(t, t, n, lambda, Ki);
-  double k = K(s, t, n, lambda, Ki);
+  printf("SSK called %d\n", ++count);
+  double k1 = K(s, s, n, lambda);
+  double k2 = K(t, t, n, lambda);
+  double k = K(s, t, n, lambda);
   return k / sqrt(k1 * k2);
 }
 
@@ -108,15 +109,13 @@ double K(const char* s, const char* t, const int n, const double lambda, double*
     }
   }
 
-  //printf("Kpreloopfree\n");
-  for (int i = 0; i < 2; ++i) {
-    for (int j = 0; j < (slen + 1); ++j) {
+  for (i = 0; i < 2; ++i) {
+    for (j = 0; j < (slen + 1); ++j) {
       free(kp[i][j]);
       //printf("freed j:%d/%d n=%d\n", j,slen,n);
     }
     free(kp[i]);
   }
-  //printf("Kpostloopfree\n");
   free(kp);
   //printf("Kpfree\n");
   Ki[n] = sum;
@@ -125,10 +124,10 @@ double K(const char* s, const char* t, const int n, const double lambda, double*
 }
 
 int main(int argc, char** argv) {
-  char s[] = "science is organized knowledge";
-  char t[] = "wisdom is organized life";
+  char s[] = "mar mar";
+  char t[] = "hello world";
 
-  printf("%lf\n", ssk(s, t, 3, 0.5));
+  printf("%f\n", ssk(s, t, 14, 0.5));
   return 0;
 }
 
