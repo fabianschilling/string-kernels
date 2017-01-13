@@ -14,9 +14,9 @@ double K(const char* s, const char* t, const int n, const double lambda, double*
 
 double ssk(const char* s, const char* t, const int n, const double lambda) {
   printf("SSK called %d\n", ++count);
-  double k1 = K(s, s, n, lambda);
-  double k2 = K(t, t, n, lambda);
-  double k = K(s, t, n, lambda);
+  double k1 = K(s, s, n, lambda,Ki);
+  double k2 = K(t, t, n, lambda,Ki);
+  double k = K(s, t, n, lambda,Ki);
   return k / sqrt(k1 * k2);
 }
 

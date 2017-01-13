@@ -28,33 +28,6 @@ class ExperimentRunner:
     CRUDE = 2
     CORN = 3
     
-    #EARN_N_TRAIN = 5
-    #EARN_N_TEST = 4
-    #ACQ_N_TRAIN = 5
-    #ACQ_N_TEST = 4
-    #CRUDE_N_TRAIN = 5
-    #CRUDE_N_TEST = 4
-    #CORN_N_TRAIN = 5
-    #CORN_N_TEST = 4
-    
-    #EARN_N_TRAIN = 10
-    #EARN_N_TEST = 8
-    #ACQ_N_TRAIN = 10
-    #ACQ_N_TEST = 8
-    #CRUDE_N_TRAIN = 10
-    #CRUDE_N_TEST = 8
-    #CORN_N_TRAIN = 10
-    #CORN_N_TEST = 8
-    
-    EARN_N_TRAIN = 152
-    EARN_N_TEST = 40
-    ACQ_N_TRAIN = 114
-    ACQ_N_TEST = 25
-    CRUDE_N_TRAIN = 76
-    CRUDE_N_TEST = 15
-    CORN_N_TRAIN = 38
-    CORN_N_TEST = 10
-    
     def show_results_table(self,precision,recall,fscore,Ktype):
         #show table with results
         
@@ -81,70 +54,27 @@ class ExperimentRunner:
         #import data
 
         print "importing train + test data..."
-        all_files = reuters.fileids()
-        #print(len(all_files))
-
-        train_files = list(filter(lambda file: file.startswith('train'), all_files))
-        #print(len(train_files))
-
-        test_files = list(filter(lambda file: file.startswith('test'), all_files))
-        #print(len(test_files))
-
-        categories = reuters.categories()
-
-        earn_docs = reuters.fileids('earn')
-        acq_docs = reuters.fileids('acq')
-        crude_docs = reuters.fileids('crude')
-        corn_docs = reuters.fileids('corn')
-
-        earn_train_docs = [w for w in earn_docs if w in train_files]   
-        earn_test_docs = [w for w in earn_docs if w in test_files]  
-
-        acq_train_docs = [w for w in acq_docs if w in train_files]   
-        acq_test_docs = [w for w in acq_docs if w in test_files]  
-
-        crude_train_docs = [w for w in crude_docs if w in train_files]   
-        crude_test_docs = [w for w in crude_docs if w in test_files]  
-
-        corn_train_docs = [w for w in corn_docs if w in train_files]   
-        corn_test_docs = [w for w in corn_docs if w in test_files]  
-
-
-        #TODO: figure out how to pick out the docs we want
         
-        #TODO: also determine if we need to use the beautiful soup + regex to remove clutter ('<', '&'...)
+        labels = {
+        'acq': 0,
+        'corn': 1,
+        'crude': 2,
+        'earn': 3
+        }
+        num = 1
+        with open('../dataset/reuters.pkl', 'rb') as f1:
+            dataset = pickle.load(f1)
         
-        for docHandle in earn_train_docs[0:ExperimentRunner.EARN_N_TRAIN]: 
-            self.TrainDocVals.append(" ".join(word_tokenize(self.clean_doc(reuters.raw(docHandle)))))
-            self.TrainDocLabels.append(ExperimentRunner.EARN)
-
-        for docHandle in acq_train_docs[0:ExperimentRunner.ACQ_N_TRAIN]:
-            self.TrainDocVals.append(" ".join(word_tokenize(self.clean_doc(reuters.raw(docHandle)))))
-            self.TrainDocLabels.append(ExperimentRunner.ACQ)
-
-        for docHandle in crude_train_docs[0:ExperimentRunner.CRUDE_N_TRAIN]:
-            self.TrainDocVals.append(" ".join(word_tokenize(self.clean_doc(reuters.raw(docHandle)))))
-            self.TrainDocLabels.append(ExperimentRunner.CRUDE)
-
-        for docHandle in corn_train_docs[0:ExperimentRunner.CORN_N_TRAIN]:
-            self.TrainDocVals.append(" ".join(word_tokenize(self.clean_doc(reuters.raw(docHandle)))))
-            self.TrainDocLabels.append(ExperimentRunner.CORN)
-
-        for docHandle in earn_test_docs[0:ExperimentRunner.EARN_N_TEST]:
-            self.TestDocVals.append(" ".join(word_tokenize(self.clean_doc(reuters.raw(docHandle)))))
-            self.TestDocLabels.append(ExperimentRunner.EARN)
-
-        for docHandle in acq_test_docs[0:ExperimentRunner.ACQ_N_TEST]:
-            self.TestDocVals.append(" ".join(word_tokenize(self.clean_doc(reuters.raw(docHandle)))))
-            self.TestDocLabels.append(ExperimentRunner.ACQ)
-
-        for docHandle in crude_test_docs[0:ExperimentRunner.CRUDE_N_TEST]:
-            self.TestDocVals.append(" ".join(word_tokenize(self.clean_doc(reuters.raw(docHandle)))))
-            self.TestDocLabels.append(ExperimentRunner.CRUDE)
-
-        for docHandle in corn_test_docs[0:ExperimentRunner.CORN_N_TEST]:
-            self.TestDocVals.append(" ".join(word_tokenize(self.clean_doc(reuters.raw(docHandle)))))
-            self.TestDocLabels.append(ExperimentRunner.CORN)
+        train_inputs = [tup[0] for tup in dataset['train'][::num]]
+        train_labels = np.array([labels[tup[1]] for tup in dataset['train'][::num]])
+ 
+        test_inputs = [tup[0] for tup in dataset['test'][::num]]
+        test_labels = np.array([labels[tup[1]] for tup in dataset['test'][::num]])
+        
+        self.TrainDocVals = train_inputs
+        self.TrainDocLabels = train_labels
+        self.TestDocVals = test_inputs
+        self.TestDocLabels = test_labels
 
         print "done"
         
