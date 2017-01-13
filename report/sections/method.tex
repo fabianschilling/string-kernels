@@ -42,6 +42,10 @@ We employ these custom string kernels in conjunction with a support vector machi
 
 We assess the text classification performance on the popular \textit{ModApte} split of the \textit{Reuters-21578} dataset which contains news articles from $80$ categories such as \textit{earn}, \textit{acquisition}, \textit{crude}, and \textit{corn}. The dataset is easily obtained using the Natural Language Toolkit (NLTK) \cite{nltk}.
 
+From those categories, the document freqency 
+
+\input{tables/reuters.tex}
+
 We train the kernel SVM and test the classification performance on a self-constructed train/test split of the dataset that contains the four categories mentioned above. Our evaluation metrics are: precision, recall, and F1-score. The classification results are obtained using different hyperparameters of the respective kernel.
 
 % TODO: we should definitely mention the (comparatively) shitty performance of SSK in their experiments
