@@ -23,10 +23,11 @@ class ExperimentRunner:
       Usage: Create instance and call run_full_test(k,lambda) or specific tests
     """
 
-    EARN = 0
-    ACQ = 1
+    
+    ACQ = 0
+    CORN = 1
     CRUDE = 2
-    CORN = 3
+    EARN = 3
     
     def show_results_table(self,precision,recall,fscore,Ktype):
         #show table with results

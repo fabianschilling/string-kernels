@@ -88,7 +88,7 @@ def wkGmats(trainDocs, testDocs):
     train_data_features = vectorizer.fit_transform(trainDocs)
     train_data_features = train_data_features.toarray()
 
-    transformer = TfidfTransformer(smooth_idf=False)
+    transformer = TfidfTransformer(smooth_idf=True)
     tfidf = transformer.fit_transform(train_data_features)
     tfidf = tfidf.toarray() 
     #print tfidf
@@ -106,7 +106,7 @@ def wkGmats(trainDocs, testDocs):
     train_data_features = vectorizer.transform(testDocs)
     train_data_features = train_data_features.toarray()
 
-    transformer = TfidfTransformer(smooth_idf=False)
+    transformer = TfidfTransformer(smooth_idf=True)
     tfidfTest = transformer.fit_transform(train_data_features)
     tfidfTest = tfidfTest.toarray() 
     #print tfidf
