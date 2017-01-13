@@ -63,7 +63,7 @@ class ExperimentRunner:
         'earn': 3
         }
         num = 1
-        with open('../dataset/reuters.pkl', 'rb') as f1:
+        with open('../dataset/modapte_split_3.pkl', 'rb') as f1:
             dataset = pickle.load(f1)
         
         train_inputs = [tup[0] for tup in dataset['train'][::num]]
