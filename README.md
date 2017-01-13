@@ -1,8 +1,8 @@
-# string-kernels
+# Text Classification using String Kernels
 
-Project in Advanced Machine Learning about String Kernels
+Project in DD2434 Machine Learning, Advanced Course at KTH.
 
-## Install
+## Requirements
 
 Run
 ``` sh
