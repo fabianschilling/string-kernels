@@ -2,24 +2,19 @@
 
 Project in Advanced Machine Learning about String Kernels
 
-## Install NLTK
+## Install
 
-To install NLTK:
+Run
 ``` sh
-$ sudo pip install -U nltk
+$ pip install -r requirements.txt
 ```
 
-To download the dataset open up a `python` prompt:
-``` python
+## Dataset
+
+Run in a python prompt
+```
 >>> import nltk
 >>> nltk.download()
 ```
 
-In the window that pops up, select the `Corpora` tab and select `reuters` to download the `Reuters-21578 ModApte version`. We also need the `punkt` module from the `Models` tab.
-
-## Install scikit-learn
-
-To install scikit-learn:
-``` sh
-$ sudo pip install -U scikit-learn
-```
+Download `reuters`, `punkt`, and `stopwords`.

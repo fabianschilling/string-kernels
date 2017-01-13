@@ -1,0 +1,5 @@
+numpy
+scipy
+nltk
+scikit-learn
+matplotlib
