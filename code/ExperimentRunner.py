@@ -307,29 +307,27 @@ class ExperimentRunner:
         res = self.do_classification(self.SSKTrainGram, self.SSKTestGram, 'SSK')
         self.show_results_table(res[0],res[1],res[2],'SSK')
         
-    def run_SSK_NGK_Combi_test(self, k, wSSK, wNGK, lamb):
+    def run_SSK_NGK_Combi_test(self, SSKGramFileName, wSSK, wNGK):
         print "computing Gram matrices"
         #get NGK mat
         print "NGK..."
-        self.NGKTrainGram, self.NGKTestGram = ngk.ngkGmats(self.TrainDocVals, self.TestDocVals,k)
+        self.NGKTrainGram, self.NGKTestGram = ngk.ngkGmats(self.TrainDocVals, self.TestDocVals,5)
         
+        with open(SSKGramFileName + 'Train.pickle', 'rb') as f1:
+            self.SSKTrainGram = pickle.load(f1)
+        
+        with open(SSKGramFileName + 'Test.pickle', 'rb') as f2:
+            self.SSKTestGram = pickle.load(f2)
+            
         #get SSK + NGK mat
         print "NGK + SSK..."
-        for i in xrange( 0, len(self.TrainDocVals) ):
-            if( (i+1)%10 == 0 ):
-                print "Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) )       
-            for j in xrange(0,len(self.TrainDocVals)):
-                self.SSKTrainGram[i][j] = ssk.ssk(self.TrainDocVals[i], self.TrainDocVals[j], k, lamb)*wSSK +                                                                 self.NGKTrainGram[i][j]*wNGK
         
-        for i in xrange( 0, len(self.TestDocVals) ):
-            if( (i+1)%10 == 0 ):
-                print "Test row %d of %d\n" % ( i+1, len(self.TestDocVals) )       
-            for j in xrange(0,len(self.TrainDocVals)):
-                self.SSKTestGram[i][j] = ssk.ssk(self.TestDocVals[i], self.TrainDocVals[j], k, lamb)*wSSK +                                                                  self.NGKTestGram[i][j]*wNGK
+        self.NGKTestGram = self.NGKTestGram*wNGK + self.SSKTestGram*wSSK
+        self.NGKTrainGram = self.NGKTrainGram*wNGK + self.SSKTrainGram*wSSK
 
         print "done"
-        res = self.do_classification(self.SSKTrainGram, self.SSKTestGram, 'SSK')
-        self.show_results_table(res[0],res[1],res[2],'SSK')
+        res = self.do_classification(self.NGKTrainGram, self.NGKTestGram, 'SSK + NGK')
+        self.show_results_table(res[0],res[1],res[2],'SSK + NGK')
         
     def run_SSK_lam_Combi_test(self, k, lam1, lam2):
         print "computing Gram matrices"
