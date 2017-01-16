@@ -63,7 +63,7 @@ class ExperimentRunner:
         'earn': 3
         }
         num = 1
-        with open('../dataset/reuters.pkl', 'rb') as f1:
+        with open('../dataset/modapte_split_3.pkl', 'rb') as f1:
             dataset = pickle.load(f1)
         
         train_inputs = [tup[0] for tup in dataset['train'][::num]]
@@ -286,21 +286,23 @@ class ExperimentRunner:
             
             return res
         
-    def run_SSK_k_Combi_test(self, k1, k2, lamb):
-        print "computing Gram matrices"
-        #compute Gram matrix for training (train,train)
-        for i in xrange( 0, len(self.TrainDocVals) ):
-            if( (i+1)%10 == 0 ):
-                print "Train row %d of %d\n" % ( i+1, len(self.TrainDocVals) )       
-            for j in xrange(0,len(self.TrainDocVals)):
-                self.SSKTrainGram[i][j] = ssk.ssk(self.TrainDocVals[i], self.TrainDocVals[j], k1, lamb) +                                                                 ssk.ssk(self.TrainDocVals[i], self.TrainDocVals[j], k2, lamb)
-        
-        for i in xrange( 0, len(self.TestDocVals) ):
-            if( (i+1)%10 == 0 ):
-                print "Test row %d of %d\n" % ( i+1, len(self.TestDocVals) )       
-            for j in xrange(0,len(self.TrainDocVals)):
-                self.SSKTestGram[i][j] = ssk.ssk(self.TestDocVals[i], self.TrainDocVals[j], k1, lamb) +                                                                  ssk.ssk(self.TestDocVals[i], self.TrainDocVals[j], k2, lamb) 
+    def run_SSK_k_Combi_test(self, k1GramFileName, k2GramFileName):
 
+        with open(k1GramFileName + 'Train.pickle', 'rb') as f1:
+            k1TrainGram = pickle.load(f1)
+        
+        with open(k1GramFileName + 'Test.pickle', 'rb') as f2:
+            k1TestGram = pickle.load(f2)
+
+        with open(k2GramFileName + 'Train.pickle', 'rb') as f1:
+            k2TrainGram = pickle.load(f1)
+        
+        with open(k2GramFileName + 'Test.pickle', 'rb') as f2:
+            k2TestGram = pickle.load(f2)
+            
+        self.SSKTrainGram = k1TrainGram + k2TrainGram
+        self.SSKTestGram = k1TestGram + k2TestGram
+        
         print "done"
         res = self.do_classification(self.SSKTrainGram, self.SSKTestGram, 'SSK')
         self.show_results_table(res[0],res[1],res[2],'SSK')
