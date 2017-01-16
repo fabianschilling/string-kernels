@@ -46,6 +46,6 @@ The news articles use many abbreviations for common words such as \say{dlrs} for
 
 \input{tables/reuters.tex}
 
-For data preprocessing, we followed a very similar procedure as in the original paper. For each raw document, we converted the entire sequence to lower-case letters, removed all characters except those lower-case letters (i.e. numbers and punctuation), all superfluous whitespace, and finally all stopwords usgin NLTK's built-in \say{english} stopword list.
+For data preprocessing, we followed a very similar procedure as in the original paper. For each raw document, we converted the entire sequence to lower-case letters, removed all characters except those lower-case letters (i.e. numbers and punctuation), all superfluous whitespace, and finally all stopwords using NLTK's built-in \say{english} stopword list.
 
 We train the kernel SVM and test the classification performance on a self-constructed train/test split of the dataset that contains the four categories mentioned above. Our evaluation metrics are: precision, recall, and F1-score. The classification results are obtained using the default hyperparameters of Scikit-learn SVM implementation with precomputed Gram matrices and by altering the kernel specific arguments.
